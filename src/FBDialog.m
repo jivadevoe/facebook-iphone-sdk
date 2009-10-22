@@ -293,60 +293,64 @@ static CGFloat kBorderWidth = 10;
   return [self initWithSession:[FBSession session]];
 }
 
-- (id)initWithSession:(FBSession*)session {
-  if (self = [super initWithFrame:CGRectZero]) {
-    _delegate = nil;
-    _session = [session retain];
-    _loadingURL = nil;
-    _orientation = UIDeviceOrientationUnknown;
-    _showingKeyboard = NO;
-    
-    self.backgroundColor = [UIColor clearColor];
-    self.autoresizesSubviews = YES;
-    self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.contentMode = UIViewContentModeRedraw;
-    
-    UIImage* iconImage = [UIImage imageNamed:@"FBConnect.bundle/images/fbicon.png"];
-    UIImage* closeImage = [UIImage imageNamed:@"FBConnect.bundle/images/close.png"];
-    
-    _iconView = [[UIImageView alloc] initWithImage:iconImage];
-    [self addSubview:_iconView];
-    
-    UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
-    _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-    [_closeButton setImage:closeImage forState:UIControlStateNormal];
-    [_closeButton setTitleColor:color forState:UIControlStateNormal];
-    [_closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [_closeButton addTarget:self action:@selector(cancel)
-      forControlEvents:UIControlEventTouchUpInside];
-    _closeButton.font = [UIFont boldSystemFontOfSize:12];
-    _closeButton.showsTouchWhenHighlighted = YES;
-    _closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin
-      | UIViewAutoresizingFlexibleBottomMargin;
-    [self addSubview:_closeButton];
-    
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _titleLabel.text = kDefaultTitle;
-    _titleLabel.backgroundColor = [UIColor clearColor];
-    _titleLabel.textColor = [UIColor whiteColor];
-    _titleLabel.font = [UIFont boldSystemFontOfSize:14];
-    _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin
-      | UIViewAutoresizingFlexibleBottomMargin;
-    [self addSubview:_titleLabel];
+- (id)initWithSession:(FBSession*)session 
+{
+    if (self = [super initWithFrame:CGRectZero]) 
+    {
+        _delegate = nil;
+        _session = [session retain];
+        _loadingURL = nil;
+        _orientation = UIDeviceOrientationUnknown;
+        _showingKeyboard = NO;
         
-    _webView = [[UIWebView alloc] initWithFrame:CGRectZero];
-    _webView.delegate = self;
-    _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self addSubview:_webView];
+        self.backgroundColor = [UIColor clearColor];
+        self.autoresizesSubviews = YES;
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.contentMode = UIViewContentModeRedraw;
+        
+        UIImage* iconImage = [UIImage imageNamed:@"FBConnect.bundle/images/fbicon.png"];
+        UIImage* closeImage = [UIImage imageNamed:@"FBConnect.bundle/images/close.png"];
+        
+        _iconView = [[UIImageView alloc] initWithImage:iconImage];
+        [self addSubview:_iconView];
+        
+        UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
+        _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+        [_closeButton setImage:closeImage forState:UIControlStateNormal];
+        [_closeButton setTitleColor:color forState:UIControlStateNormal];
+        [_closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [_closeButton addTarget:self action:@selector(cancel)
+               forControlEvents:UIControlEventTouchUpInside];
 
-    _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
-      UIActivityIndicatorViewStyleWhiteLarge];
-    _spinner.autoresizingMask =
-      UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
-      | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    [self addSubview:_spinner];
-  }
-  return self;
+        _closeButton.titleLabel.font = [UIFont boldSystemFontOfSize:12];
+        
+        _closeButton.showsTouchWhenHighlighted = YES;
+        _closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin
+        | UIViewAutoresizingFlexibleBottomMargin;
+        [self addSubview:_closeButton];
+        
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _titleLabel.text = kDefaultTitle;
+        _titleLabel.backgroundColor = [UIColor clearColor];
+        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.font = [UIFont boldSystemFontOfSize:14];
+        _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin
+        | UIViewAutoresizingFlexibleBottomMargin;
+        [self addSubview:_titleLabel];
+        
+        _webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+        _webView.delegate = self;
+        _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self addSubview:_webView];
+        
+        _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
+                    UIActivityIndicatorViewStyleWhiteLarge];
+        _spinner.autoresizingMask =
+        UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
+        | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [self addSubview:_spinner];
+    }
+    return self;
 }
 
 - (void)dealloc {

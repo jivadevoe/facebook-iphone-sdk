@@ -32,18 +32,19 @@
  * resume method after instantiating your session.
  */
 @interface FBSession : NSObject {
-  NSMutableArray* _delegates;
-  NSString* _apiKey;
-  NSString* _apiSecret;
-  NSString* _getSessionProxy;
-  FBUID _uid;
-  NSString* _sessionKey;
-  NSString* _sessionSecret;
-  NSDate* _expirationDate;
-  NSMutableArray* _requestQueue;
-  NSDate* _lastRequestTime;
-  int _requestBurstCount;
-  NSTimer* _requestTimer;
+    // this array doesn't retain the values, so it's ok to use for delegates.
+    NSMutableArray* _delegates;
+    NSString* _apiKey;
+    NSString* _apiSecret;
+    NSString* _getSessionProxy;
+    FBUID _uid;
+    NSString* _sessionKey;
+    NSString* _sessionSecret;
+    NSDate* _expirationDate;
+    NSMutableArray* _requestQueue;
+    NSDate* _lastRequestTime;
+    int _requestBurstCount;
+    NSTimer* _requestTimer;
 }
 
 /**
@@ -114,23 +115,20 @@
  * This session is not retained, so you are still responsible for retaining it yourself.  The
  * first session that is created is automatically stored here.
  */
-+ (void)setSession:(FBSession*)session;
 
 /**
  * Constructs a session and stores it as the globally shared session instance.
  *
  * @param secret the application secret (optional)
  */
-+ (FBSession*)sessionForApplication:(NSString*)key secret:(NSString*)secret
-  delegate:(id<FBSessionDelegate>)delegate;
++ (FBSession*)sessionForApplication:(NSString*)key secret:(NSString*)secret delegate:(id<FBSessionDelegate>)delegate;
 
 /**
  * Constructs a session and stores it as the global singleton.
  *
  * @param getSessionProxy a url to that proxies auth.getSession (optional)
  */
-+ (FBSession*)sessionForApplication:(NSString*)key getSessionProxy:(NSString*)getSessionProxy
-  delegate:(id<FBSessionDelegate>)delegate;
++ (FBSession*)sessionForApplication:(NSString*)key getSessionProxy:(NSString*)getSessionProxy delegate:(id<FBSessionDelegate>)delegate;
 
 /**
  * Constructs a session for an application.

@@ -39,28 +39,45 @@ static FBSession* sharedSession = nil;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
-+ (FBSession*)session {
-  return sharedSession;
++ (FBSession*)session 
+{
+    return sharedSession;
 }
 
-+ (void)setSession:(FBSession*)session {
-  sharedSession = session;
++(void)resetSession;
+{
+    [sharedSession release];
+    sharedSession = nil;
 }
 
-+ (FBSession*)sessionForApplication:(NSString*)key secret:(NSString*)secret
-    delegate:(id<FBSessionDelegate>)delegate {
-  FBSession* session = [[[FBSession alloc] initWithKey:key secret:secret
-    getSessionProxy:nil] autorelease];
-  [session.delegates addObject:delegate];
-  return session;
++(FBSession *)sharedSessionForApplication:(NSString*)key secret:(NSString*)secret delegate:(id<FBSessionDelegate>)delegate 
+{
+    if(!sharedSession)
+        sharedSession = [[FBSession alloc] initWithKey:key secret:secret getSessionProxy:nil];
+
+    [sharedSession.delegates addObject:delegate];
+    
+    return sharedSession;    
 }
 
-+ (FBSession*)sessionForApplication:(NSString*)key getSessionProxy:(NSString*)getSessionProxy
-    delegate:(id<FBSessionDelegate>)delegate {
-  FBSession* session = [[[FBSession alloc] initWithKey:key secret:nil
-    getSessionProxy:getSessionProxy] autorelease];
-  [session.delegates addObject:delegate];
-  return session;
++ (FBSession*)sharedSessionForApplication:(NSString*)key getSessionProxy:(NSString*)getSessionProxy delegate:(id<FBSessionDelegate>)delegate 
+{
+    if(!sharedSession)
+        sharedSession = [[FBSession alloc] initWithKey:key secret:nil getSessionProxy:getSessionProxy];
+    
+    [sharedSession.delegates addObject:delegate];
+
+    return sharedSession;
+}
+
++ (FBSession*)sessionForApplication:(NSString*)key secret:(NSString*)secret delegate:(id<FBSessionDelegate>)delegate 
+{
+    return [self sharedSessionForApplication:key secret:secret delegate:delegate];
+}
+
++ (FBSession*)sessionForApplication:(NSString*)key getSessionProxy:(NSString*)getSessionProxy delegate:(id<FBSessionDelegate>)delegate 
+{
+    return [self sharedSessionForApplication:key getSessionProxy:getSessionProxy delegate:delegate];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,15 +174,12 @@ static FBSession* sharedSession = nil;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// NSObject
+// initialization and dealloc
 
-- (FBSession*)initWithKey:(NSString*)key secret:(NSString*)secret
-    getSessionProxy:(NSString*)getSessionProxy {
-  if (self = [super init]) {
-    if (!sharedSession) {
-      sharedSession = self;
-    }
-    
+- (FBSession*)initWithKey:(NSString*)key secret:(NSString*)secret getSessionProxy:(NSString*)getSessionProxy 
+{
+  if (self = [super init]) 
+  {
     _delegates = FBCreateNonRetainingArray();    
     _apiKey = [key copy];
     _apiSecret = [secret copy];
@@ -182,11 +196,8 @@ static FBSession* sharedSession = nil;
   return self;
 }
 
-- (void)dealloc {
-  if (sharedSession == self) {
-    sharedSession = nil;
-  }
-
+- (void)dealloc 
+{
   [_delegates release];
   [_requestQueue release];
   [_apiKey release];
