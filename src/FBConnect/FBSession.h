@@ -122,6 +122,7 @@
  * @param secret the application secret (optional)
  */
 + (FBSession*)sessionForApplication:(NSString*)key secret:(NSString*)secret delegate:(id<FBSessionDelegate>)delegate;
++(FBSession *)sharedSessionForApplication:(NSString*)key secret:(NSString*)secret delegate:(id<FBSessionDelegate>)delegate; 
 
 /**
  * Constructs a session and stores it as the global singleton.
